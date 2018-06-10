@@ -1,6 +1,6 @@
 function redis(redisHost, redisPort, redisInstance) {
     this.raven = require('raven');
-    this.raven.config('https://70fd4185ada74caf820ee534f4d9f1d2@sentry.io/1222649').install();
+    this.raven.config('https://70fd4185ada74caf820ee534f4d9f1d2@sentry.io/1222933').install();
     this.client = require('redis').createClient({
         host: redisHost,
         port: redisPort

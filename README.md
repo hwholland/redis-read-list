@@ -1,5 +1,5 @@
-# append-list
-Utility that appends a value to a list in Redis
+# read-list
+Microservice that retrieves a specified list from Redis and returns an array of values 
 
 ## Technical Summary
 [tbd]
@@ -15,7 +15,7 @@ Download the package to the host computer (desktop or server), then navigate
 to the project's directory on the filesystem using a command-prompt or terminal.
 
 ```
-~/append-list
+~/read-list
 ```
 
 Run the following command to install the node.js dependency modules.
