@@ -1,6 +1,4 @@
 function redis(redisHost, redisPort, redisInstance) {
-    this.raven = require('raven');
-    this.raven.config('https://70fd4185ada74caf820ee534f4d9f1d2@sentry.io/1222933').install();
     this.client = require('redis').createClient({
         host: redisHost,
         port: redisPort
@@ -34,19 +32,17 @@ redis.prototype.publish = function(channel, data) {
     this.client.publish(channel, data);
 };
 
-redis.prototype.getList = function(key) {
+redis.prototype.read = function(key) {
     var that = this;
-    return(new Promise((resolve, reject) => {
-        this.client.lrange(key, 0, -1, function(error, response) {
-            if(error) {
-                resolve(error);
-            }
-            else {
+    return (new Promise((resolve, reject) => {
+        that.client.lrange(key, 0, -1, function(error, response) {
+            if (error) {
+                reject(error);
+            } else {
                 resolve(response);
             }
         });
     }));
-    
 };
 
 redis.prototype.quit = function() {

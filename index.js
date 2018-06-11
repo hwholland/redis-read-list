@@ -1,20 +1,23 @@
-/**
- * @module            	view-object
- * @description 		micro-service application that reads a hash from Redis based on updates published to a Redis sub/pub channel
- */
+var argv = require('minimist')(process.argv.slice(2));
+const path = require('path');
+const redis = require('./redis');
 
-const express = require("express");
-const bodyParser = require("body-parser");
-const path = require("path");
-const router = require("./router");
+var redisHost = argv.redisHost;
+var redisPort = argv.redisPort;
+var redisInstance = argv.redisInstance;
+var redisChannel = 'view:list:*';
+var redisClient = new redis(redisHost, redisPort, redisInstance);
 
-var oApp = express();
-var oRouter = new router(oApp, express);
+function fnCallback(pattern, channel, message) {
+	pattern = pattern.substring(0, pattern.length - 1);
+	var listKey = channel.replace(pattern, '');
+	var tempClient = new redis(redisHost, redisPort, redisInstance);
+	//tempClient.read(listKey);
+	var pList = new Promise((resolve, reject) => {
+		resolve(tempClient.read(listKey));
+	}).then(function(response) {
+		console.log(response);
+	});
+}
 
-express.static.mime.default_type = "text/xml";
-
-oApp.use(bodyParser.urlencoded({extended: false}));
-oRouter.setMiddleware("bodyParser", bodyParser, {jsonParser: bodyParser.json()});
-oRouter.loadRoutes();
-oApp.listen(3001);
-
+redisClient.subscribe(redisChannel, fnCallback);
